@@ -48,6 +48,13 @@ input {
     font-size: 14px;
 }
 
+.lgpd {
+    font-size: 12px;
+    color: #555;
+    margin-bottom: 10px;
+    text-align: center;
+}
+
 button {
     width: 100%;
     padding: 12px;
@@ -94,6 +101,11 @@ button:hover {
     <input id="uf" placeholder="UF">
     <input id="data" type="date">
     <input id="cpf" placeholder="CPF">
+
+    <!-- 🔐 LGPD -->
+    <p class="lgpd">
+        Ao clicar em "Enviar", você concorda com a coleta e o uso dos seus dados para fins de cadastro, conforme a Lei Geral de Proteção de Dados (LGPD).
+    </p>
 
     <button onclick="enviar()">Enviar</button>
 
@@ -150,6 +162,10 @@ async function enviar() {
 
         if (res.ok) {
             alert("Salvo com sucesso!");
+
+            // 🔥 limpa formulário
+            document.querySelectorAll("input").forEach(i => i.value = "");
+
         } else {
             alert("Erro na API");
         }
@@ -162,4 +178,5 @@ async function enviar() {
 </script>
 
 </body>
+</html>
 </html>
