@@ -1,5 +1,10 @@
 const express = require('express');
+const cors = require('cors');
+
 const app = express();
+
+// 🔥 LIBERA ACESSO DO SITE (GitHub Pages)
+app.use(cors());
 
 app.use(express.json());
 
