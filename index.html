@@ -56,7 +56,7 @@ button:hover {
 <h2>Cadastro</h2>
 
 <input id="nome" placeholder="Nome">
-<input id="cep" placeholder="CEP">
+<input id="cep" placeholder="CEP (somente números)">
 <input id="rua" placeholder="Rua">
 <input id="numero" placeholder="Número">
 <input id="bairro" placeholder="Bairro">
@@ -71,6 +71,36 @@ button:hover {
 
 <script>
 
+// 🔥 espera carregar
+window.onload = () => {
+
+  // 🔥 busca CEP
+  document.getElementById("cep").addEventListener("blur", async () => {
+    const cep = document.getElementById("cep").value.replace(/\D/g, '');
+
+    if (cep.length === 8) {
+      try {
+        const res = await fetch(`https://viacep.com.br/ws/${cep}/json/`);
+        const data = await res.json();
+
+        if (!data.erro) {
+          document.getElementById("rua").value = data.logradouro;
+          document.getElementById("bairro").value = data.bairro;
+          document.getElementById("cidade").value = data.localidade;
+          document.getElementById("uf").value = data.uf;
+        } else {
+          alert("CEP não encontrado");
+        }
+
+      } catch (e) {
+        alert("Erro ao buscar CEP");
+      }
+    }
+  });
+
+};
+
+// 🚀 enviar
 async function enviar() {
 
   const dados = {
@@ -111,4 +141,3 @@ async function enviar() {
 
 </body>
 </html>
-<!-- teste -->
