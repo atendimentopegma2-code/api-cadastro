@@ -7,11 +7,11 @@
 
 <style>
 body {
-  font-family: Arial;
+  font-family: Arial, sans-serif;
   margin: 0;
   padding: 0;
 
-  background: #f0f0f0;
+  background: linear-gradient(135deg, #4CAF50, #2E7D32);
 
   display: flex;
   justify-content: center;
@@ -20,27 +20,31 @@ body {
   min-height: 100vh;
 }
 
-/* FORMULÁRIO */
+/* CARD */
 .container {
   width: 92%;
   max-width: 420px;
 
   background: white;
-  padding: 20px;
-  border-radius: 10px;
+  padding: 25px;
+  border-radius: 12px;
 
-  box-shadow: 0 0 15px rgba(0,0,0,0.2);
+  box-shadow: 0 10px 25px rgba(0,0,0,0.2);
 }
 
 h2 {
   text-align: center;
   margin-bottom: 20px;
+  color: #2E7D32;
 }
 
 /* CAMPOS */
+.input-group {
+  margin-bottom: 12px;
+}
+
 input {
   width: 100%;
-  margin-bottom: 12px;
   padding: 12px;
 
   border: 1px solid #ccc;
@@ -54,7 +58,7 @@ button {
   width: 100%;
   padding: 14px;
 
-  background: green;
+  background: #2E7D32;
   color: white;
 
   border: none;
@@ -62,10 +66,24 @@ button {
 
   font-size: 16px;
   cursor: pointer;
+
+  transition: 0.3s;
 }
 
 button:hover {
-  background: darkgreen;
+  background: #1b5e20;
+}
+
+button:disabled {
+  background: gray;
+}
+
+/* LOADING */
+.loading {
+  text-align: center;
+  font-size: 14px;
+  margin-top: 10px;
+  display: none;
 }
 </style>
 </head>
@@ -76,27 +94,44 @@ button:hover {
 
 <h2>Cadastro</h2>
 
-<input id="nome" placeholder="Nome">
-<input id="cep" placeholder="CEP (somente números)">
-<input id="rua" placeholder="Rua">
-<input id="numero" placeholder="Número">
-<input id="bairro" placeholder="Bairro">
-<input id="cidade" placeholder="Cidade">
-<input id="uf" placeholder="UF">
-<input id="data_nascimento" type="date">
-<input id="cpf" placeholder="CPF">
+<div class="input-group"><input id="nome" placeholder="Nome"></div>
+<div class="input-group"><input id="cep" placeholder="CEP"></div>
+<div class="input-group"><input id="rua" placeholder="Rua"></div>
+<div class="input-group"><input id="numero" placeholder="Número"></div>
+<div class="input-group"><input id="bairro" placeholder="Bairro"></div>
+<div class="input-group"><input id="cidade" placeholder="Cidade"></div>
+<div class="input-group"><input id="uf" placeholder="UF"></div>
+<div class="input-group"><input id="data_nascimento" type="date"></div>
+<div class="input-group"><input id="cpf" placeholder="CPF"></div>
 
-<button onclick="enviar()">Enviar</button>
+<button id="btn" onclick="enviar()">Enviar</button>
+
+<div class="loading" id="loading">Enviando...</div>
 
 </div>
 
 <script>
 
-// 🔥 BUSCAR CEP AUTOMÁTICO
+// 🔥 MÁSCARA CEP
+document.getElementById("cep").addEventListener("input", function(e) {
+  let v = e.target.value.replace(/\D/g, '').slice(0,8);
+  if (v.length > 5) v = v.replace(/(\d{5})(\d+)/, '$1-$2');
+  e.target.value = v;
+});
+
+// 🔥 MÁSCARA CPF
+document.getElementById("cpf").addEventListener("input", function(e) {
+  let v = e.target.value.replace(/\D/g, '').slice(0,11);
+  v = v.replace(/(\d{3})(\d)/, '$1.$2');
+  v = v.replace(/(\d{3})(\d)/, '$1.$2');
+  v = v.replace(/(\d{3})(\d{1,2})$/, '$1-$2');
+  e.target.value = v;
+});
+
+// 🔥 BUSCAR CEP
 document.getElementById("cep").addEventListener("blur", async function() {
 
   let cep = this.value.replace(/\D/g, '');
-
   if (cep.length !== 8) return;
 
   try {
@@ -109,27 +144,41 @@ document.getElementById("cep").addEventListener("blur", async function() {
       document.getElementById("cidade").value = dados.localidade;
       document.getElementById("uf").value = dados.uf;
     }
-
-  } catch (e) {
-    console.log("Erro ao buscar CEP");
+  } catch {
+    console.log("Erro CEP");
   }
-
 });
 
+// 🔥 VALIDAR
+function validar() {
+  if (!nome.value || !cpf.value || !cep.value) {
+    alert("Preencha os campos obrigatórios!");
+    return false;
+  }
+  return true;
+}
 
-// 🔥 ENVIAR DADOS
+// 🔥 ENVIAR
 async function enviar() {
 
+  if (!validar()) return;
+
+  const btn = document.getElementById("btn");
+  const loading = document.getElementById("loading");
+
+  btn.disabled = true;
+  loading.style.display = "block";
+
   const dados = {
-    nome: document.getElementById("nome").value,
-    cep: document.getElementById("cep").value,
-    rua: document.getElementById("rua").value,
-    numero: document.getElementById("numero").value,
-    bairro: document.getElementById("bairro").value,
-    cidade: document.getElementById("cidade").value,
-    uf: document.getElementById("uf").value,
-    data_nascimento: document.getElementById("data_nascimento").value,
-    cpf: document.getElementById("cpf").value
+    nome: nome.value,
+    cep: cep.value,
+    rua: rua.value,
+    numero: numero.value,
+    bairro: bairro.value,
+    cidade: cidade.value,
+    uf: uf.value,
+    data_nascimento: data_nascimento.value,
+    cpf: cpf.value
   };
 
   try {
@@ -149,9 +198,12 @@ async function enviar() {
       alert("Erro ao salvar");
     }
 
-  } catch (e) {
-    alert("Erro na conexão com API");
+  } catch {
+    alert("Erro na API");
   }
+
+  btn.disabled = false;
+  loading.style.display = "none";
 }
 
 </script>
