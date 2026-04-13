@@ -1,209 +1,176 @@
 <!DOCTYPE html>
-<html>
+<html lang="pt-br">
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
 <title>Cadastro</title>
 
 <style>
+
+/* ============================= */
+/* FUNDO AMARELO PROFISSIONAL */
+/* ============================= */
 body {
-  font-family: Arial, sans-serif;
-  margin: 0;
-  padding: 0;
+    margin: 0;
+    font-family: Arial, sans-serif;
 
-  background: linear-gradient(135deg, #4CAF50, #2E7D32);
-
-  display: flex;
-  justify-content: center;
-  align-items: center;
-
-  min-height: 100vh;
+    background: linear-gradient(135deg, #e0a800, #ffd24d);
+    
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    height: 100vh;
 }
 
-/* CARD */
+/* ============================= */
+/* CONTAINER */
+/* ============================= */
 .container {
-  width: 92%;
-  max-width: 420px;
+    width: 95%;
+    max-width: 420px;
 
-  background: white;
-  padding: 25px;
-  border-radius: 12px;
+    background: white;
+    padding: 20px;
+    border-radius: 12px;
 
-  box-shadow: 0 10px 25px rgba(0,0,0,0.2);
+    box-shadow: 0 10px 25px rgba(0,0,0,0.2);
 }
 
+/* ============================= */
+/* TITULO */
+/* ============================= */
 h2 {
-  text-align: center;
-  margin-bottom: 20px;
-  color: #2E7D32;
+    text-align: center;
+    margin-bottom: 15px;
 }
 
-/* CAMPOS */
-.input-group {
-  margin-bottom: 12px;
-}
-
+/* ============================= */
+/* INPUTS */
+/* ============================= */
 input {
-  width: 100%;
-  padding: 12px;
+    width: 100%;
+    padding: 10px;
+    margin-bottom: 10px;
 
-  border: 1px solid #ccc;
-  border-radius: 6px;
-
-  font-size: 16px;
+    border-radius: 6px;
+    border: 1px solid #ccc;
+    font-size: 14px;
 }
 
+/* ============================= */
 /* BOTÃO */
+/* ============================= */
 button {
-  width: 100%;
-  padding: 14px;
+    width: 100%;
+    padding: 12px;
 
-  background: #2E7D32;
-  color: white;
+    background: #28a745;
+    color: white;
 
-  border: none;
-  border-radius: 6px;
+    border: none;
+    border-radius: 6px;
 
-  font-size: 16px;
-  cursor: pointer;
-
-  transition: 0.3s;
+    font-size: 16px;
+    cursor: pointer;
 }
 
 button:hover {
-  background: #1b5e20;
+    background: #218838;
 }
 
-button:disabled {
-  background: gray;
+/* ============================= */
+/* RESPONSIVO MOBILE */
+/* ============================= */
+@media (max-width: 600px) {
+    body {
+        height: auto;
+        padding: 20px;
+    }
+
+    .container {
+        width: 100%;
+    }
 }
 
-/* LOADING */
-.loading {
-  text-align: center;
-  font-size: 14px;
-  margin-top: 10px;
-  display: none;
-}
 </style>
 </head>
 
 <body>
 
 <div class="container">
+    <h2>Cadastro</h2>
 
-<h2>Cadastro</h2>
+    <input id="nome" placeholder="Nome">
+    <input id="cep" placeholder="CEP (somente números)">
+    <input id="rua" placeholder="Rua">
+    <input id="numero" placeholder="Número">
+    <input id="bairro" placeholder="Bairro">
+    <input id="cidade" placeholder="Cidade">
+    <input id="uf" placeholder="UF">
+    <input id="data" type="date">
+    <input id="cpf" placeholder="CPF">
 
-<div class="input-group"><input id="nome" placeholder="Nome"></div>
-<div class="input-group"><input id="cep" placeholder="CEP"></div>
-<div class="input-group"><input id="rua" placeholder="Rua"></div>
-<div class="input-group"><input id="numero" placeholder="Número"></div>
-<div class="input-group"><input id="bairro" placeholder="Bairro"></div>
-<div class="input-group"><input id="cidade" placeholder="Cidade"></div>
-<div class="input-group"><input id="uf" placeholder="UF"></div>
-<div class="input-group"><input id="data_nascimento" type="date"></div>
-<div class="input-group"><input id="cpf" placeholder="CPF"></div>
-
-<button id="btn" onclick="enviar()">Enviar</button>
-
-<div class="loading" id="loading">Enviando...</div>
-
+    <button onclick="enviar()">Enviar</button>
 </div>
 
 <script>
 
-// 🔥 MÁSCARA CEP
-document.getElementById("cep").addEventListener("input", function(e) {
-  let v = e.target.value.replace(/\D/g, '').slice(0,8);
-  if (v.length > 5) v = v.replace(/(\d{5})(\d+)/, '$1-$2');
-  e.target.value = v;
-});
+/* ============================= */
+/* BUSCA CEP */
+/* ============================= */
+document.getElementById("cep").addEventListener("blur", async () => {
 
-// 🔥 MÁSCARA CPF
-document.getElementById("cpf").addEventListener("input", function(e) {
-  let v = e.target.value.replace(/\D/g, '').slice(0,11);
-  v = v.replace(/(\d{3})(\d)/, '$1.$2');
-  v = v.replace(/(\d{3})(\d)/, '$1.$2');
-  v = v.replace(/(\d{3})(\d{1,2})$/, '$1-$2');
-  e.target.value = v;
-});
+    let cep = document.getElementById("cep").value.replace(/\D/g, '');
 
-// 🔥 BUSCAR CEP
-document.getElementById("cep").addEventListener("blur", async function() {
+    if (cep.length !== 8) return;
 
-  let cep = this.value.replace(/\D/g, '');
-  if (cep.length !== 8) return;
+    try {
+        let res = await fetch(`https://viacep.com.br/ws/${cep}/json/`);
+        let data = await res.json();
 
-  try {
-    const res = await fetch(`https://viacep.com.br/ws/${cep}/json/`);
-    const dados = await res.json();
+        document.getElementById("rua").value = data.logradouro || "";
+        document.getElementById("bairro").value = data.bairro || "";
+        document.getElementById("cidade").value = data.localidade || "";
+        document.getElementById("uf").value = data.uf || "";
 
-    if (!dados.erro) {
-      document.getElementById("rua").value = dados.logradouro;
-      document.getElementById("bairro").value = dados.bairro;
-      document.getElementById("cidade").value = dados.localidade;
-      document.getElementById("uf").value = dados.uf;
+    } catch (erro) {
+        alert("Erro ao buscar CEP");
     }
-  } catch {
-    console.log("Erro CEP");
-  }
 });
 
-// 🔥 VALIDAR
-function validar() {
-  if (!nome.value || !cpf.value || !cep.value) {
-    alert("Preencha os campos obrigatórios!");
-    return false;
-  }
-  return true;
-}
-
-// 🔥 ENVIAR
+/* ============================= */
+/* ENVIO */
+/* ============================= */
 async function enviar() {
 
-  if (!validar()) return;
+    const dados = {
+        nome: document.getElementById("nome").value,
+        cep: document.getElementById("cep").value,
+        rua: document.getElementById("rua").value,
+        numero: document.getElementById("numero").value,
+        bairro: document.getElementById("bairro").value,
+        cidade: document.getElementById("cidade").value,
+        uf: document.getElementById("uf").value,
+        data: document.getElementById("data").value,
+        cpf: document.getElementById("cpf").value
+    };
 
-  const btn = document.getElementById("btn");
-  const loading = document.getElementById("loading");
+    try {
+        const res = await fetch("https://SEU-SITE-DO-RENDER.onrender.com/salvar", {
+            method: "POST",
+            headers: { "Content-Type": "application/json" },
+            body: JSON.stringify(dados)
+        });
 
-  btn.disabled = true;
-  loading.style.display = "block";
+        if (res.ok) {
+            alert("Salvo com sucesso!");
+        } else {
+            alert("Erro na API");
+        }
 
-  const dados = {
-    nome: nome.value,
-    cep: cep.value,
-    rua: rua.value,
-    numero: numero.value,
-    bairro: bairro.value,
-    cidade: cidade.value,
-    uf: uf.value,
-    data_nascimento: data_nascimento.value,
-    cpf: cpf.value
-  };
-
-  try {
-    const res = await fetch("https://api-cadastro-a8ba.onrender.com/salvar", {
-      method: "POST",
-      headers: {
-        "Content-Type": "application/json"
-      },
-      body: JSON.stringify(dados)
-    });
-
-    const resposta = await res.json();
-
-    if (resposta.status === "salvo") {
-      alert("Salvo com sucesso!");
-    } else {
-      alert("Erro ao salvar");
+    } catch (erro) {
+        alert("Erro ao conectar com servidor");
     }
-
-  } catch {
-    alert("Erro na API");
-  }
-
-  btn.disabled = false;
-  loading.style.display = "none";
 }
 
 </script>
