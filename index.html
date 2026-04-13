@@ -9,8 +9,9 @@ body {
   font-family: Arial;
   margin: 0;
   padding: 0;
-  
-  background: url("fundo.jpg") no-repeat center center fixed;
+
+  /* FUNDO AJUSTADO */
+  background: url("fundo.jpg") no-repeat center;
   background-size: cover;
 
   display: flex;
@@ -20,36 +21,40 @@ body {
   min-height: 100vh;
 }
 
+/* CAIXA DO FORMULÁRIO */
 .container {
-  width: 90%;
-  max-width: 500px;
+  width: 95%;
+  max-width: 600px; /* 🔥 aumentei */
 
-  background: rgba(255, 255, 255, 0.95);
-  padding: 25px;
+  background: rgba(255, 255, 255, 0.98);
+  padding: 30px;
   border-radius: 12px;
 
-  box-shadow: 0 0 20px rgba(0,0,0,0.2);
+  box-shadow: 0 0 25px rgba(0,0,0,0.3);
 }
 
 h2 {
   text-align: center;
+  font-size: 26px;
   margin-bottom: 20px;
 }
 
+/* CAMPOS */
 input {
   width: 100%;
-  margin-bottom: 12px;
-  padding: 12px;
+  margin-bottom: 14px;
+  padding: 14px;
 
   border: 1px solid #ccc;
   border-radius: 6px;
 
-  font-size: 16px;
+  font-size: 18px; /* 🔥 maior */
 }
 
+/* BOTÃO */
 button {
   width: 100%;
-  padding: 14px;
+  padding: 16px;
 
   background: green;
   color: white;
@@ -57,7 +62,7 @@ button {
   border: none;
   border-radius: 6px;
 
-  font-size: 18px;
+  font-size: 20px; /* 🔥 maior */
   cursor: pointer;
 }
 
@@ -65,19 +70,21 @@ button:hover {
   background: darkgreen;
 }
 
-/* 🔥 RESPONSIVO CELULAR */
+/* 🔥 MOBILE FORTE */
 @media (max-width: 600px) {
   .container {
-    width: 95%;
-    padding: 20px;
+    width: 98%;
+    padding: 25px;
   }
 
   input {
-    font-size: 18px;
+    font-size: 20px;
+    padding: 16px;
   }
 
   button {
-    font-size: 18px;
+    font-size: 20px;
+    padding: 18px;
   }
 }
 </style>
