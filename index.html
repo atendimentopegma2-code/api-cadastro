@@ -10,9 +10,7 @@ body {
   margin: 0;
   padding: 0;
 
-  /* FUNDO AJUSTADO */
-  background: url("fundo.jpg") no-repeat center;
-  background-size: 70%;
+  background: #f0f0f0;
 
   display: flex;
   justify-content: center;
@@ -21,40 +19,38 @@ body {
   min-height: 100vh;
 }
 
-/* CAIXA DO FORMULÁRIO */
+/* 🔥 FORMULÁRIO GRANDE MESMO */
 .container {
   width: 95%;
-  max-width: 600px; /* 🔥 aumentei */
+  max-width: 700px; /* 🔥 aumentei bastante */
 
-  background: rgba(255, 255, 255, 0.98);
-  padding: 30px;
+  background: white;
+  padding: 35px;
   border-radius: 12px;
 
-  box-shadow: 0 0 25px rgba(0,0,0,0.3);
+  box-shadow: 0 0 25px rgba(0,0,0,0.2);
 }
 
 h2 {
   text-align: center;
-  font-size: 26px;
-  margin-bottom: 20px;
+  font-size: 28px;
+  margin-bottom: 25px;
 }
 
-/* CAMPOS */
 input {
   width: 100%;
-  margin-bottom: 14px;
-  padding: 14px;
+  margin-bottom: 15px;
+  padding: 16px;
 
   border: 1px solid #ccc;
   border-radius: 6px;
 
-  font-size: 18px; /* 🔥 maior */
+  font-size: 20px; /* 🔥 grande */
 }
 
-/* BOTÃO */
 button {
   width: 100%;
-  padding: 16px;
+  padding: 18px;
 
   background: green;
   color: white;
@@ -62,7 +58,7 @@ button {
   border: none;
   border-radius: 6px;
 
-  font-size: 20px; /* 🔥 maior */
+  font-size: 22px;
   cursor: pointer;
 }
 
@@ -70,7 +66,7 @@ button:hover {
   background: darkgreen;
 }
 
-/* 🔥 MOBILE FORTE */
+/* 🔥 MOBILE */
 @media (max-width: 600px) {
   .container {
     width: 98%;
@@ -79,12 +75,10 @@ button:hover {
 
   input {
     font-size: 20px;
-    padding: 16px;
   }
 
   button {
-    font-size: 20px;
-    padding: 18px;
+    font-size: 22px;
   }
 }
 </style>
