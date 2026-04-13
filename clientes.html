@@ -1,0 +1,78 @@
+<!DOCTYPE html>
+<html lang="pt-br">
+<head>
+<meta charset="UTF-8">
+<title>Clientes</title>
+
+<style>
+body {
+    font-family: Arial;
+    background: #f4f4f4;
+    padding: 20px;
+}
+
+h2 {
+    text-align: center;
+}
+
+table {
+    width: 100%;
+    border-collapse: collapse;
+    background: white;
+}
+
+th, td {
+    padding: 10px;
+    border: 1px solid #ddd;
+}
+
+th {
+    background: #e0a800;
+}
+</style>
+</head>
+
+<body>
+
+<h2>Lista de Clientes</h2>
+
+<table>
+<thead>
+<tr>
+<th>Nome</th>
+<th>CPF</th>
+<th>Cidade</th>
+<th>Data</th>
+</tr>
+</thead>
+
+<tbody id="dados"></tbody>
+
+</table>
+
+<script>
+
+async function carregar() {
+    const res = await fetch("https://api-cadastro-a8ba.onrender.com/clientes");
+    const dados = await res.json();
+
+    const tabela = document.getElementById("dados");
+
+    dados.forEach(c => {
+        tabela.innerHTML += `
+            <tr>
+                <td>${c.nome}</td>
+                <td>${c.cpf}</td>
+                <td>${c.cidade}</td>
+                <td>${c.data}</td>
+            </tr>
+        `;
+    });
+}
+
+carregar();
+
+</script>
+
+</body>
+</html>
